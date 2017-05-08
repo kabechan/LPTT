@@ -40,9 +40,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let displayWidth: CGFloat = self.view.frame.width
         let displayHeight: CGFloat = self.view.frame.height/2.65
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight))
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
+        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customCell")
         tableView.dataSource = self
         tableView.delegate = self
+        self.tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
         self.view.addSubview(tableView)
         
         //nowTimeLabelの設定
@@ -83,8 +84,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //Cellが選択された際に呼び出される
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Num: \(indexPath.row)")
-        print("Value: \(items[indexPath.row])")
+        //print("Num: \(indexPath.row)")
+        //print("Value: \(items[indexPath.row])")
     }
     
     //Cellの総数を返す
@@ -95,10 +96,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //Cellに値を設定する
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用するCellを取得する.
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath as IndexPath)
         
         // Cellに値を設定する.
-        cell.textLabel!.text = "\(items[indexPath.row])"
+        //cell.textLabel!.text = "\(items[indexPath.row])"
         
         return cell
     }
