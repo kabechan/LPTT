@@ -11,8 +11,9 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private var countButton: UIButton!
+    private var setButton: UIButton!
     
-    private let items: NSArray = []
+    private let items: NSArray = [0, 1, 2, 3, 4, 5, 6]
     private var tableView: UITableView!
     
     private var nowTimeLabel: UILabel!
@@ -34,6 +35,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         countButton.titleLabel?.textAlignment = NSTextAlignment.center
         countButton.titleLabel?.font = UIFont.systemFont(ofSize: 70)
         self.view.addSubview(countButton)
+        
+        //setButtonの設定
+        setButton = UIButton(frame: CGRect(x: self.view.frame.width/1.2, y: 35, width: 40, height: 40))
+        setButton.setImage(UIImage(named: "set.jpg"), for: .normal)
+        setButton.addTarget(self, action: #selector(ViewController.onClickSetButton(sender:)), for: .touchUpInside)
+        self.view.addSubview(setButton)
         
         //tableViewの設定
         let barHeight: CGFloat = 90
@@ -80,6 +87,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    //setButtonの処理
+    internal func onClickSetButton(sender: UIButton){
+        //遷移するViewの定義
+        let mySecondViewController: UIViewController = SecondViewController()
+        
+        //アニメーションを設定
+        mySecondViewController.modalTransitionStyle = .crossDissolve
+        
+        //Viewの移動
+        self.present(mySecondViewController, animated: true, completion: nil)
     }
     
     //Cellが選択された際に呼び出される
