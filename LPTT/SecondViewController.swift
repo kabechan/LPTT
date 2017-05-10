@@ -21,7 +21,7 @@ class SecondViewController: UIViewController {
         self.view.backgroundColor = UIColor.black
         
         //backButtonの設定
-        backButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        backButton = UIButton(frame: CGRect(x: 10, y: 0, width: 50, height: 50))
         backButton.backgroundColor = UIColor.darkGray
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 50)
         backButton.setTitle("←", for: .normal)
