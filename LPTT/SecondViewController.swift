@@ -10,8 +10,8 @@ import UIKit
 
 class SecondViewController: UIViewController {
     
-    private var addButton: UIButton!
     private var backButton: UIButton!
+    private var addButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,12 +21,20 @@ class SecondViewController: UIViewController {
         self.view.backgroundColor = UIColor.black
         
         //backButtonの設定
-        backButton = UIButton(frame: CGRect(x: 10, y: 0, width: 50, height: 50))
+        backButton = UIButton(frame: CGRect(x: self.view.frame.width/4, y: self.view.frame.height/1.2, width: 50, height: 50))
         backButton.backgroundColor = UIColor.darkGray
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 50)
         backButton.setTitle("←", for: .normal)
         backButton.addTarget(self, action: #selector(SecondViewController.onClickBackButton(sender:)), for: .touchUpInside)
         self.view.addSubview(backButton)
+        
+        //addButtonの設定
+        addButton = UIButton(frame: CGRect(x: self.view.frame.width/1.6, y: self.view.frame.height/1.2, width: 50, height: 50))
+        addButton.backgroundColor = UIColor.darkGray
+        addButton.titleLabel?.font = UIFont.systemFont(ofSize: 50)
+        addButton.setTitle("+", for: .normal)
+        addButton.addTarget(self, action: #selector(SecondViewController.onClickAddButton(sender:)), for: .touchUpInside)
+        self.view.addSubview(addButton)
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,7 +42,7 @@ class SecondViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    //backButtonの設定
+    //onClickBackButtonの設定
     internal func onClickBackButton(sender: UIButton){
         //遷移するViewの定義
         let myFirstViewController: UIViewController = ViewController()
@@ -44,6 +52,18 @@ class SecondViewController: UIViewController {
         
         //Viewの移動
         self.present(myFirstViewController, animated: true, completion: nil)
+    }
+    
+    //onClickAddButtonの設定
+    internal func onClickAddButton(sender: UIButton){
+        //遷移するViewの定義
+        let myThirdViewController: UIViewController = ThirdViewController()
+        
+        //アニメーションを設定
+        myThirdViewController.modalTransitionStyle = .crossDissolve
+        
+        //Viewの移動
+        self.present(myThirdViewController, animated:  true, completion: nil)
     }
     /*
     // MARK: - Navigation
