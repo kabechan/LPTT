@@ -25,7 +25,7 @@ class ThirdViewController: UIViewController {
         backButton.setTitle("←", for: .normal)
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 50)
         backButton.addTarget(self, action: #selector(ThirdViewController.onClickBackButton(sender:)), for: .touchUpInside)
-        self.view.addSubview(backButton)
+        //self.view.addSubview(backButton)
     }
 
     override func didReceiveMemoryWarning() {

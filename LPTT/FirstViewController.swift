@@ -47,10 +47,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let displayWidth: CGFloat = self.view.frame.width
         let displayHeight: CGFloat = self.view.frame.height/2.65
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight))
-        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customCell")
         tableView.dataSource = self
         tableView.delegate = self
         self.tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
+        //self.tableView.spacing = 90
+        //self.tableView.estimatedRowHeight = 80
+        //self.tableView.rowHeight = UITableViewAutomaticDimension
+        //self.tableView.contentInset = UIEdgeInsetsMake(10, 20, 30, 40);
+        //self.tableView.separatorInset = UIEdgeInsetsMake(50, 50, 50, 50);
         self.view.addSubview(tableView)
         
         //nowTimeLabelの設定
@@ -108,9 +112,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     //Cellの総数を返す
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    /*func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
-    }
+    }*/
     
     //Cellに値を設定する
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -121,5 +125,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //cell.textLabel!.text = "\(items[indexPath.row])"
         
         return cell
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 5 // セルの上部のスペース
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 5 // セルの下部のスペース
+    }
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = UIColor.clear // 透明にすることでスペースとする
+    }
+    func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        view.tintColor = UIColor.clear // 透明にすることでスペースとする
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1// 普通はここで表示したいセルの数を返すが、セクションのヘッダーとフッターでスペーシングしているので、固定で1を返す
+    }
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return items.count // 表示したいセルの数
     }
 }
