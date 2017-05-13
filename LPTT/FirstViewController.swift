@@ -13,8 +13,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private var countButton: UIButton!
     private var setButton: UIButton!
     
-    private let items: NSArray = [0, 1, 2, 3, 4, 5, 6]
     private var tableView: UITableView!
+    private let items: NSArray = [0, 1, 2, 3, 4, 5, 6]
     
     private var nowTimeLabel: UILabel!
     private var setTimeLabel: UILabel!
@@ -47,14 +47,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let displayWidth: CGFloat = self.view.frame.width
         let displayHeight: CGFloat = self.view.frame.height/2.65
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight))
-        tableView.dataSource = self
         tableView.delegate = self
+        tableView.dataSource = self
         self.tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
-        //self.tableView.spacing = 90
-        //self.tableView.estimatedRowHeight = 80
-        //self.tableView.rowHeight = UITableViewAutomaticDimension
-        //self.tableView.contentInset = UIEdgeInsetsMake(10, 20, 30, 40);
-        //self.tableView.separatorInset = UIEdgeInsetsMake(50, 50, 50, 50);
         self.view.addSubview(tableView)
         
         //nowTimeLabelの設定
@@ -84,6 +79,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         textView.backgroundColor = UIColor.black
         textView.textColor = UIColor.white
         textView.textAlignment = NSTextAlignment.left
+        textView.layer.borderWidth = 2
+        textView.layer.borderColor = UIColor.white.cgColor
         textView.isEditable = false
         self.view.addSubview(textView)
     }
@@ -105,43 +102,51 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.present(mySecondViewController, animated: true, completion: nil)
     }
     
-    //Cellが選択された際に呼び出される
+    //tableViewの設定
+    //cellが選択された際に呼び出される
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //print("Num: \(indexPath.row)")
-        //print("Value: \(items[indexPath.row])")
     }
-    
-    //Cellの総数を返す
-    /*func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    //cellをハイライトできるか指定
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    //cellの総数を返す
+    //ここで表示したいセルの数を返すが、セクションのヘッダーとフッターでスペーシングしているので、固定で1を返す
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    //ここで表示したいcellの数
+    func numberOfSections(in tableView: UITableView) -> Int {
         return items.count
-    }*/
-    
-    //Cellに値を設定する
+    }
+    //適当なcellの高さを指定
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
+    }
+    //cellの上部のスペースの幅を指定
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 5
+    }
+    //cellの下部のスペースの幅を指定
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
+    }
+    //cellの上部のスペースを透明に設定
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = UIColor.clear
+    }
+    //cellの下部のスペースを透明に設定
+    func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        view.tintColor = UIColor.clear
+    }
+    //cellに値を設定する
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // 再利用するCellを取得する.
+        // 再利用するcellを取得する.
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath as IndexPath)
         
-        // Cellに値を設定する.
+        //cellに値を設定する.
         //cell.textLabel!.text = "\(items[indexPath.row])"
         
         return cell
-    }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 5 // セルの上部のスペース
-    }
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5 // セルの下部のスペース
-    }
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        view.tintColor = UIColor.clear // 透明にすることでスペースとする
-    }
-    func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        view.tintColor = UIColor.clear // 透明にすることでスペースとする
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1// 普通はここで表示したいセルの数を返すが、セクションのヘッダーとフッターでスペーシングしているので、固定で1を返す
-    }
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return items.count // 表示したいセルの数
     }
 }
