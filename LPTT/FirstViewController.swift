@@ -10,7 +10,11 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var timer: Timer!
+    var count = 0
+    
     private var countButton: UIButton!
+    
     private var setButton: UIButton!
     
     private var tableView: UITableView!
@@ -49,7 +53,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight))
         tableView.delegate = self
         tableView.dataSource = self
-        self.tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
+        tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
         self.view.addSubview(tableView)
         
         //nowTimeLabelの設定
@@ -88,6 +92,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+        timer.fire()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        timer.invalidate()
+    }
+    func update(tm: Timer) {
+        count -= 1
+        countButton.titleLabel?.text = String(count)
+        if count < 1 {
+            timer.invalidate()
+        }
     }
     
     //setButtonの処理

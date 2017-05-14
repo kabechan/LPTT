@@ -10,11 +10,13 @@ import UIKit
 
 class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
+    let save = UserDefaults.standard
+    
     private var textField: UITextField!
     
     private var pickerView: UIPickerView!
     private let minList:NSArray = ([Int](0...60) as NSArray)
-    private var secList:NSArray = ([Int](0...60) as NSArray)
+    private let secList:NSArray = ([Int](0...60) as NSArray)
     
     private var textView: UITextView!
     
@@ -31,7 +33,7 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         //textFieldの設定
         textField = UITextField(frame: CGRect(x: self.view.frame.width/7, y: 20, width: self.view.frame.width/1.4, height: 50))
         textField.backgroundColor = UIColor.white
-        textField.placeholder = "タイトル"
+        textField.placeholder = "台本(カンペ)タイトル"
         textField.textColor = UIColor.black
         textField.layer.masksToBounds = true
         textField.layer.cornerRadius = 20
@@ -95,16 +97,17 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     //選択肢に何を表示するか設定
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if component == 0{
-            return String(describing: minList[row])
+            return String(describing: minList[row]) + "分"
         }
-        return String(describing: secList[row])
+        return String(describing: secList[row]) + "秒"
     }
     //選択時の処理設定
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if component == 0{
             print(minList[row])
-        }
+        }else if component == 1{
         print(secList[row])
+        }
     }
     
     //onClickBackButtonの設定
@@ -121,6 +124,10 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     //onClickCheckButtonの設定
     internal func onClickCheckButton(sender: UIButton){
+        save.set(minList, forKey: "minKey")
+        save.set(secList, forKey: "secKey")
+        save.synchronize()
+        
     }
 
     /*

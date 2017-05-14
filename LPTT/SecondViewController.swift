@@ -10,6 +10,11 @@ import UIKit
 
 class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    let save = UserDefaults.standard
+    
+    private var minList:NSArray = ([Int](0...60) as NSArray)
+    private let secList:NSArray = ([Int](0...60) as NSArray)
+    
     private var tableView: UITableView!
     private let items: NSArray = [0, 1, 2, 3, 4, 5, 6]
     
@@ -96,6 +101,11 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用するcellを取得する.
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath as IndexPath)
+        
+        if save.object(forKey: "minKey") != nil {
+            minList = save.object(forKey: "minKey") as! [Int] as NSArray
+        }
+         
         
         //cellに値を設定する.
         //cell.textLabel!.text = "\(items[indexPath.row])"
