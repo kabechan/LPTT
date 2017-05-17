@@ -10,13 +10,17 @@ import UIKit
 
 class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
-    let save = UserDefaults.standard
-    
+    let saveData = UserDefaults.standard
+    var data: [[String]] = [[]]
+    var count = 0
+
     private var textField: UITextField!
     
     private var pickerView: UIPickerView!
     private let minList:NSArray = ([Int](0...60) as NSArray)
     private let secList:NSArray = ([Int](0...60) as NSArray)
+    var min: Int!
+    var sec: Int!
     
     private var textView: UITextView!
     
@@ -83,6 +87,13 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         // Dispose of any resources that can be recreated.
     }
     
+    /*func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        // キーボードを閉じる
+        textField.resignFirstResponder()
+        
+        return true
+    }*/
+    
     //表示する列数の設定
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 2
@@ -105,8 +116,10 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if component == 0{
             print(minList[row])
+            min = minList[row] as! Int
         }else if component == 1{
-        print(secList[row])
+            print(secList[row])
+            sec = secList[row] as! Int
         }
     }
     
@@ -124,12 +137,35 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     //onClickCheckButtonの設定
     internal func onClickCheckButton(sender: UIButton){
-        save.set(minList, forKey: "minKey")
-        save.set(secList, forKey: "secKey")
-        save.synchronize()
+        //遷移するViewの定義
+        let mySecondViewController: UIViewController = SecondViewController()
         
+        //アニメーションを設定
+        mySecondViewController.modalTransitionStyle = .crossDissolve
+        
+        //Viewの移動
+        self.present(mySecondViewController, animated: true, completion: nil)
+        
+        data[count].append(textField.text!)
+        data[count].append(String(describing: min))
+        data[count].append(String(describing: sec))
+        data[count].append(textView.text)
+        saveData.set(data, forKey: "dataKey")
+        
+        /*saveData.set(textField.text!, forKey: "titleKey")
+        data[count].append(textField.text!)
+        saveData.set(minList, forKey: "minKey")
+        data[count].append(String(describing: minList))
+        saveData.set(secList, forKey: "secKey")
+        data[count].append(String(describing: secList))
+        saveData.set(textView.text, forKey: "textKey")
+        data[count].append(textView.text)*/
+        
+        if data[count].count == 4{
+            count = count + 1
+        }
+        saveData.set(count, forKey: "countKey")
     }
-
     /*
     // MARK: - Navigation
 

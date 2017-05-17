@@ -10,13 +10,12 @@ import UIKit
 
 class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let save = UserDefaults.standard
-    
-    private var minList:NSArray = ([Int](0...60) as NSArray)
-    private let secList:NSArray = ([Int](0...60) as NSArray)
+    let saveData = UserDefaults.standard
+    var data: [[String]] = [[]]
+    var count = 0
     
     private var tableView: UITableView!
-    private let items: NSArray = [0, 1, 2, 3, 4, 5, 6]
+    //private let items: NSArray = []
     
     private var backButton: UIButton!
     private var addButton: UIButton!
@@ -75,7 +74,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     //ここで表示したいcellの数
     func numberOfSections(in tableView: UITableView) -> Int {
-        return items.count
+        return data.count
     }
     //適当なcellの高さを指定
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -100,12 +99,12 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //cellに値を設定する
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用するcellを取得する.
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath as IndexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewCell
         
-        if save.object(forKey: "minKey") != nil {
-            minList = save.object(forKey: "minKey") as! [Int] as NSArray
-        }
-         
+        saveData.string(forKey: "dataKey")
+        saveData.string(forKey: "countKey")
+        
+        cell.label1!.text = String(describing: data[count])
         
         //cellに値を設定する.
         //cell.textLabel!.text = "\(items[indexPath.row])"

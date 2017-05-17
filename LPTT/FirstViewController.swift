@@ -10,6 +10,9 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    let saveData = UserDefaults.standard
+    var data: [[String]] = [[]]
+    
     var timer: Timer!
     var count = 0
     
@@ -18,7 +21,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private var setButton: UIButton!
     
     private var tableView: UITableView!
-    private let items: NSArray = [0, 1, 2, 3, 4, 5, 6]
+    //private let items: NSArray = []
     
     private var nowTimeLabel: UILabel!
     private var setTimeLabel: UILabel!
@@ -138,7 +141,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     //ここで表示したいcellの数
     func numberOfSections(in tableView: UITableView) -> Int {
-        return items.count
+        return data.count
     }
     //適当なcellの高さを指定
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -163,11 +166,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //cellに値を設定する
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用するcellを取得する.
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath as IndexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewCell
         
         //cellに値を設定する.
         //cell.textLabel!.text = "\(items[indexPath.row])"
         
         return cell
-    }
+        }
 }
