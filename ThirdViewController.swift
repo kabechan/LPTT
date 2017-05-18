@@ -160,12 +160,16 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
         //var items = [String(textField.text!), String(min), String(sec), String(textView.text!)]
         
+        
         var items = [String]()
         items.append(textField.text!)
         items.append(String(min))
         items.append(String(sec))
         items.append(textView.text)
         
+        if items.count == 4{
+            
+        }
         /*if data[count].count == 4{
             count = count + 1
         }*/
@@ -174,7 +178,7 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         //data = items as! [[String]]
         //data = [items as! Array<String>]
         
-        saveData.set(items, forKey: "itemsKey")
+        //saveData.set(items, forKey: "itemsKey")
         saveData.set(data, forKey: "dataKey")
         //saveData.set(count, forKey: "countKey")
         saveData.synchronize()
