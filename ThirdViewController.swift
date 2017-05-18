@@ -12,7 +12,7 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     let saveData = UserDefaults.standard
     var data: [[String]] = [[]]
-    var count = 0
+    //var count = 0
 
     private var textField: UITextField!
     
@@ -79,18 +79,30 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         checkButton.titleLabel?.font = UIFont.systemFont(ofSize: 50)
         checkButton.addTarget(self, action: #selector(ThirdViewController.onClickCheckButton(sender:)), for: .touchUpInside)
         self.view.addSubview(checkButton)
-
-    }
+        
+        if saveData.array(forKey: "dataKey") != nil{
+            data = saveData.array(forKey: "dataKey") as! [[String]]
+        }
+        /*if saveData.integer(forKey: "countKey") != nil{
+            count = saveData.integer(forKey: "countKey")
+        }*/
+        }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // ユーザがキーボード以外の場所をタップすると、キーボードを閉じる
+        self.view.endEditing(true)
+    }
+    
     /*func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         // キーボードを閉じる
         textField.resignFirstResponder()
-        
+        //UIApplication.shared.keyWindow?.endEditing(true)
+        //UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         return true
     }*/
     
@@ -146,25 +158,31 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         //Viewの移動
         self.present(mySecondViewController, animated: true, completion: nil)
         
-        data[count].append(textField.text!)
-        data[count].append(String(describing: min))
-        data[count].append(String(describing: sec))
-        data[count].append(textView.text)
-        saveData.set(data, forKey: "dataKey")
+        //var items = [String(textField.text!), String(min), String(sec), String(textView.text!)]
         
-        /*saveData.set(textField.text!, forKey: "titleKey")
-        data[count].append(textField.text!)
-        saveData.set(minList, forKey: "minKey")
-        data[count].append(String(describing: minList))
-        saveData.set(secList, forKey: "secKey")
-        data[count].append(String(describing: secList))
-        saveData.set(textView.text, forKey: "textKey")
-        data[count].append(textView.text)*/
+        var items = [String]()
+        items.append(textField.text!)
+        items.append(String(min))
+        items.append(String(sec))
+        items.append(textView.text)
         
-        if data[count].count == 4{
+        /*if data[count].count == 4{
             count = count + 1
-        }
-        saveData.set(count, forKey: "countKey")
+        }*/
+        
+        data = [items as! Array<String>]
+        //data = items as! [[String]]
+        //data = [items as! Array<String>]
+        
+        saveData.set(items, forKey: "itemsKey")
+        saveData.set(data, forKey: "dataKey")
+        //saveData.set(count, forKey: "countKey")
+        saveData.synchronize()
+        
+        //data = saveData.object(forKey: "dataKey") as! [[String]]
+        //count = saveData.object(forKey: "countKey") as! Int
+        
+        print(data)
     }
     /*
     // MARK: - Navigation

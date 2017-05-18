@@ -53,6 +53,14 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         addButton.addTarget(self, action: #selector(SecondViewController.onClickAddButton(sender:)), for: .touchUpInside)
         self.view.addSubview(addButton)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        if saveData.array(forKey: "dataKey") != nil{
+            data = saveData.array(forKey: "dataKey") as! [[String]]
+        }
+        tableView.reloadData()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -104,7 +112,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         saveData.string(forKey: "dataKey")
         saveData.string(forKey: "countKey")
         
-        cell.label1!.text = String(describing: data[count])
+        //cell.label1!.text =
         
         //cellに値を設定する.
         //cell.textLabel!.text = "\(items[indexPath.row])"
