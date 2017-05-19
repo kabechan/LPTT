@@ -24,4 +24,9 @@ class TableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    //タイトル・時間を設定するメソッド
+    func setCell(titleText: String, timeText: String) {
+        label1.text = titleText
+        label2.text = timeText
+    }
 }

@@ -11,8 +11,7 @@ import UIKit
 class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     let saveData = UserDefaults.standard
-    var data: [[String]] = [[]]
-    //var count = 0
+    var data: [[String]] = []
 
     private var textField: UITextField!
     
@@ -21,6 +20,7 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     private let secList:NSArray = ([Int](0...60) as NSArray)
     var min: Int!
     var sec: Int!
+    var time: Int!
     
     private var textView: UITextView!
     
@@ -83,9 +83,6 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         if saveData.array(forKey: "dataKey") != nil{
             data = saveData.array(forKey: "dataKey") as! [[String]]
         }
-        /*if saveData.integer(forKey: "countKey") != nil{
-            count = saveData.integer(forKey: "countKey")
-        }*/
         }
 
     override func didReceiveMemoryWarning() {
@@ -139,10 +136,8 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     internal func onClickBackButton(sender: UIButton){
         //遷移するViewの定義
         let mySecondViewController: UIViewController = SecondViewController()
-        
         //アニメーションを設定
         mySecondViewController.modalTransitionStyle = .crossDissolve
-        
         //Viewの移動
         self.present(mySecondViewController, animated: true, completion: nil)
     }
@@ -151,40 +146,31 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     internal func onClickCheckButton(sender: UIButton){
         //遷移するViewの定義
         let mySecondViewController: UIViewController = SecondViewController()
-        
         //アニメーションを設定
         mySecondViewController.modalTransitionStyle = .crossDissolve
-        
         //Viewの移動
         self.present(mySecondViewController, animated: true, completion: nil)
         
         //var items = [String(textField.text!), String(min), String(sec), String(textView.text!)]
         
+        time = min * 60 + sec
         
         var items = [String]()
         items.append(textField.text!)
-        items.append(String(min))
-        items.append(String(sec))
+        items.append(String(time))
         items.append(textView.text)
         
-        if items.count == 4{
-            
+        if items.count == 3{
+            data.append(items)
         }
-        /*if data[count].count == 4{
-            count = count + 1
-        }*/
         
-        data = [items as! Array<String>]
         //data = items as! [[String]]
         //data = [items as! Array<String>]
         
-        //saveData.set(items, forKey: "itemsKey")
         saveData.set(data, forKey: "dataKey")
-        //saveData.set(count, forKey: "countKey")
         saveData.synchronize()
         
         //data = saveData.object(forKey: "dataKey") as! [[String]]
-        //count = saveData.object(forKey: "countKey") as! Int
         
         print(data)
     }

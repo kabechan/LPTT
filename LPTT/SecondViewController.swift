@@ -11,11 +11,9 @@ import UIKit
 class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let saveData = UserDefaults.standard
-    var data: [[String]] = [[]]
-    var count = 0
+    var data: [[String]] = []
     
     private var tableView: UITableView!
-    //private let items: NSArray = []
     
     private var backButton: UIButton!
     private var addButton: UIButton!
@@ -34,6 +32,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight))
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorColor = UIColor.clear
         self.tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
         self.view.addSubview(tableView)
         
@@ -56,6 +55,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        //UserDefaultsの情報をdataに追加
         if saveData.array(forKey: "dataKey") != nil{
             data = saveData.array(forKey: "dataKey") as! [[String]]
         }
@@ -70,7 +70,19 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //tableViewの設定
     //cellが選択された際に呼び出される
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //遷移するViewの定義
+        let myThirdViewController: UIViewController = ThirdViewController()
+        //アニメーションを設定
+        myThirdViewController.modalTransitionStyle = .crossDissolve
+        //Viewの移動
+        self.present(myThirdViewController, animated:  true, completion: nil)
     }
+    
+    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
+        
+        return true
+    }
+    
     //cellをハイライトできるか指定
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         return true
@@ -108,15 +120,9 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用するcellを取得する.
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewCell
-        
-        saveData.string(forKey: "dataKey")
-        saveData.string(forKey: "countKey")
-        
-        //cell.label1!.text =
-        
-        //cellに値を設定する.
-        //cell.textLabel!.text = "\(items[indexPath.row])"
-        
+        //customCellのLabelにデータを取得
+        cell.setCell(titleText: data[indexPath.section][0], timeText: data[indexPath.section][1])
+
         return cell
     }
 
@@ -124,10 +130,8 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     internal func onClickBackButton(sender: UIButton){
         //遷移するViewの定義
         let myFirstViewController: UIViewController = ViewController()
-        
         //アニメーションを設定
         myFirstViewController.modalTransitionStyle = .crossDissolve
-        
         //Viewの移動
         self.present(myFirstViewController, animated: true, completion: nil)
     }
@@ -136,10 +140,8 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     internal func onClickAddButton(sender: UIButton){
         //遷移するViewの定義
         let myThirdViewController: UIViewController = ThirdViewController()
-        
         //アニメーションを設定
         myThirdViewController.modalTransitionStyle = .crossDissolve
-        
         //Viewの移動
         self.present(myThirdViewController, animated:  true, completion: nil)
     }

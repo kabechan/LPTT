@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let saveData = UserDefaults.standard
-    var data: [[String]] = [[]]
+    var data: [[String]] = []
     
     var timer: Timer!
     var count = 0
@@ -21,7 +21,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private var setButton: UIButton!
     
     private var tableView: UITableView!
-    //private let items: NSArray = []
     
     private var nowTimeLabel: UILabel!
     private var setTimeLabel: UILabel!
@@ -56,6 +55,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight))
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorColor = UIColor.clear
         tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
         self.view.addSubview(tableView)
         
@@ -101,12 +101,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewWillAppear(true)
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
         timer.fire()
+        //UserDefaultsの情報をdataに追加
+        if saveData.array(forKey: "dataKey") != nil{
+            data = saveData.array(forKey: "dataKey") as! [[String]]
+        }
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         timer.invalidate()
     }
     func update(tm: Timer) {
+        for i in 0..<data.count {
+            count = count + Int(data[i][1])!
+        }
         count -= 1
         countButton.titleLabel?.text = String(count)
         if count < 1 {
@@ -118,10 +126,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     internal func onClickSetButton(sender: UIButton){
         //遷移するViewの定義
         let mySecondViewController: UIViewController = SecondViewController()
-        
         //アニメーションを設定
         mySecondViewController.modalTransitionStyle = .crossDissolve
-        
         //Viewの移動
         self.present(mySecondViewController, animated: true, completion: nil)
     }
@@ -132,6 +138,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     //cellをハイライトできるか指定
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        //編集を可能にする
         return true
     }
     //cellの総数を返す
@@ -167,9 +174,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用するcellを取得する.
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewCell
-        
-        //cellに値を設定する.
-        //cell.textLabel!.text = "\(items[indexPath.row])"
+        //customCellのLabelにデータを取得
+        cell.setCell(titleText: data[indexPath.section][0], timeText: data[indexPath.section][1])
         
         return cell
         }
