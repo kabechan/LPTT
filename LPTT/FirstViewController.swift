@@ -86,6 +86,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         textView.backgroundColor = UIColor.black
         textView.textColor = UIColor.white
         textView.textAlignment = NSTextAlignment.left
+        textView.font = UIFont.systemFont(ofSize: 25)
         textView.layer.borderWidth = 2
         textView.layer.borderColor = UIColor.white.cgColor
         textView.isEditable = false
@@ -112,9 +113,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         timer.invalidate()
     }
     func update(tm: Timer) {
-        for i in 0..<data.count {
+        print(0)
+        for i in 0..<1 {
+            print(i)
+            print(count)
             count = count + Int(data[i][1])!
         }
+        print(count)
         count -= 1
         countButton.titleLabel?.text = String(count)
         if count < 1 {
@@ -135,6 +140,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //tableViewの設定
     //cellが選択された際に呼び出される
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        func update(tm: Timer) {
+            var now = data[indexPath.section][1]
+            count = Int(now)!
+            print(count)
+            count -= 1
+            nowTimeLabel.text = String(count)
+            if count < 1 {
+                timer.invalidate()
+            }
+        }
+            
+        if setTimeLabel.text != "" && textView.text != ""{
+            setTimeLabel.text = ""
+            textView.text = ""
+        }
+        setTimeLabel.text = data[indexPath.section][1]
+        textView.text = data[indexPath.section][2]
     }
     //cellをハイライトできるか指定
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
