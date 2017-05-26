@@ -13,7 +13,7 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     let saveData = UserDefaults.standard
     var data: [[String]] = []
 
-    private var textField: UITextField!
+    var textField: UITextField!
     
     private var pickerView: UIPickerView!
     private let minList:NSArray = ([Int](0...60) as NSArray)

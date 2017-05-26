@@ -76,11 +76,8 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         myThirdViewController.modalTransitionStyle = .crossDissolve
         //Viewの移動
         self.present(myThirdViewController, animated:  true, completion: nil)
-    }
-    
-    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
         
-        return true
+        print(data)
     }
     
     //cellをハイライトできるか指定

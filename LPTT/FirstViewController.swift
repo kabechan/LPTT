@@ -13,8 +13,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let saveData = UserDefaults.standard
     var data: [[String]] = []
     
-    var timer: Timer!
     var count = 0
+    
+    var timer: Timer!
+    var count1 = 0
     
     private var countButton: UIButton!
     
@@ -86,7 +88,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         textView.backgroundColor = UIColor.black
         textView.textColor = UIColor.white
         textView.textAlignment = NSTextAlignment.left
-        textView.font = UIFont.systemFont(ofSize: 25)
+        //textView.font = UIFont.systemFont(ofSize: 25)
         textView.layer.borderWidth = 2
         textView.layer.borderColor = UIColor.white.cgColor
         textView.isEditable = false
@@ -98,31 +100,58 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Dispose of any resources that can be recreated.
     }
     
+    //画面が表示される直前
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-        timer.fire()
         //UserDefaultsの情報をdataに追加
         if saveData.array(forKey: "dataKey") != nil{
             data = saveData.array(forKey: "dataKey") as! [[String]]
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
-        timer.invalidate()
-    }
-    func update(tm: Timer) {
         print(0)
-        for i in 0..<1 {
-            print(i)
-            print(count)
+        //dataの分秒の数値を全て取得
+        for i in 0..<data.count {
             count = count + Int(data[i][1])!
         }
-        print(count)
+    }
+    
+    //画面が表示された直後
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        /*//timerの生成 func update(tm: Timer)を１秒間隔で呼び出す
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+        //任意のタイミングでタイマーに登録したターゲットのメソッドを呼ぶ
+        timer.fire()*/
+        countButton.titleLabel?.text = String(count)
+        //timerの生成 func update(tm: Timer)を１秒間隔で呼び出す
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update1), userInfo: nil, repeats: true)
+
+    }
+    
+    //別の画面に遷移する直前
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        //タイマーの停止
+        timer.invalidate()
+    }
+    //timerの処理を設定
+    /*func update(tm: Timer) {
         count -= 1
         countButton.titleLabel?.text = String(count)
+        //０になったらタイマーの停止
         if count < 1 {
+            timer.invalidate()
+        }
+    }*/
+    
+    func update1(tm: Timer) {
+        print(count1)
+        //count1 -= 1
+        nowTimeLabel.text = String(count1)
+        count1 -= 1
+        /*if count1 < 1 {
+            timer.invalidate()
+        }*/
+        if count1 < 0 {
             timer.invalidate()
         }
     }
@@ -140,17 +169,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //tableViewの設定
     //cellが選択された際に呼び出される
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        func update(tm: Timer) {
-            var now = data[indexPath.section][1]
-            count = Int(now)!
-            print(count)
-            count -= 1
-            nowTimeLabel.text = String(count)
-            if count < 1 {
-                timer.invalidate()
-            }
-        }
-            
+        //タイマーの停止
+        timer.invalidate()
+        count1 = Int(data[indexPath.section][1])!
+        //timerの生成 func update(tm: Timer)を１秒間隔で呼び出す
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update1), userInfo: nil, repeats: true)
+        //任意のタイミングでタイマーに登録したターゲットのメソッドを呼ぶ
+        timer.fire()
+        
         if setTimeLabel.text != "" && textView.text != ""{
             setTimeLabel.text = ""
             textView.text = ""
