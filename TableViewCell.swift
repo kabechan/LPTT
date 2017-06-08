@@ -10,8 +10,9 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
     
-    @IBOutlet var label1: UILabel!
-    @IBOutlet var label2: UILabel!
+    @IBOutlet var title: UILabel!
+    @IBOutlet var min: UILabel!
+    @IBOutlet var sec: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,8 +26,9 @@ class TableViewCell: UITableViewCell {
     }
     
     //タイトル・時間を設定するメソッド
-    func setCell(titleText: String, timeText: String) {
-        label1.text = titleText
-        label2.text = timeText
+    func setCell(titleText: String, minText: String, secText: String) {
+        title.text = titleText
+        min.text = minText
+        sec.text = secText
     }
 }

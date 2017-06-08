@@ -10,23 +10,26 @@ import UIKit
 
 class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
+    //データを保存する定数:savaDataの作成
     let saveData = UserDefaults.standard
+    //多次元配列dataの作成
     var data: [[String]] = []
+    var count = 0
 
     var textField: UITextField!
     
     private var pickerView: UIPickerView!
     private let minList:NSArray = ([Int](0...60) as NSArray)
-    private let secList:NSArray = ([Int](0...60) as NSArray)
-    var min: Int!
-    var sec: Int!
-    var time: Int!
+    private let secList:NSArray = ([Int](0...59) as NSArray)
+    var min = 0
+    var sec = 0
     
     private var textView: UITextView!
     
     private var backButton: UIButton!
     private var checkButton: UIButton!
 
+    //Viewが初めて呼び出される時に一度だけ
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -80,6 +83,7 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         checkButton.addTarget(self, action: #selector(ThirdViewController.onClickCheckButton(sender:)), for: .touchUpInside)
         self.view.addSubview(checkButton)
         
+        //saveDataに保存したデータのdataへの呼び出し
         if saveData.array(forKey: "dataKey") != nil{
             data = saveData.array(forKey: "dataKey") as! [[String]]
         }
@@ -90,18 +94,26 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         // Dispose of any resources that can be recreated.
     }
     
+    //画面が表示された直後
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        for i in 0..<data.count{
+            count = Int(data[i][0])! + 1
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // ユーザがキーボード以外の場所をタップすると、キーボードを閉じる
         self.view.endEditing(true)
     }
     
     /*func textFieldShouldReturn(_ textField: UITextField) -> Bool{
-        // キーボードを閉じる
-        textField.resignFirstResponder()
-        //UIApplication.shared.keyWindow?.endEditing(true)
-        //UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        return true
-    }*/
+     // キーボードを閉じる
+     textField.resignFirstResponder()
+     //UIApplication.shared.keyWindow?.endEditing(true)
+     //UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+     return true
+     }*/
     
     //表示する列数の設定
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -153,20 +165,26 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
         //var items = [String(textField.text!), String(min), String(sec), String(textView.text!)]
         
-        time = min * 60 + sec
-        
+        //配列itemsの作成
         var items = [String]()
+        //String型の数字に変換してitemsに追加
+        items.append(String(count))
+        //textField.textの文字列をitemsに追加
         items.append(textField.text!)
-        items.append(String(time))
+        //String型の数字に変換してitemsに追加
+        items.append(String(min))
+        items.append(String(sec))
+        //textView.textの文字列をitemsに追加
         items.append(textView.text)
-        
-        if items.count == 3{
-            data.append(items)
-        }
         
         //data = items as! [[String]]
         //data = [items as! Array<String>]
         
+        //もしitems.countの値が５ならitemsの配列をdataの多次元配列に追加
+        if items.count == 5{
+            data.append(items)
+        }
+        //saveDataに多次元配列のdataを保存　呼び出し鍵はdataKey
         saveData.set(data, forKey: "dataKey")
         saveData.synchronize()
         
@@ -175,13 +193,12 @@ class ThirdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         print(data)
     }
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
 }

@@ -10,25 +10,35 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    //データを保存する定数:savaDataの作成
     let saveData = UserDefaults.standard
+    //多次元配列dataの作成
     var data: [[String]] = []
+    var tag = -2
     
     var count = 0
+    var minCount = 0
+    var secCount = 0
     
     var timer: Timer!
-    var count1 = 0
+    var min = 0
+    var sec = 0
     
     private var countButton: UIButton!
+    var timerRunning = true
     
     private var setButton: UIButton!
     
     private var tableView: UITableView!
+    var choice: IndexPath! = nil
+    //var auto: IndexPath! = nil
     
     private var nowTimeLabel: UILabel!
     private var setTimeLabel: UILabel!
     
     private var textView: UITextView!
 
+    //Viewが初めて呼び出される時に一度だけ
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -42,6 +52,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         countButton.setTitleColor(UIColor.white, for: .normal)
         countButton.titleLabel?.textAlignment = NSTextAlignment.center
         countButton.titleLabel?.font = UIFont.systemFont(ofSize: 70)
+        countButton.addTarget(self, action: #selector(ViewController.onClickCountButton), for: .touchUpInside)
         self.view.addSubview(countButton)
         
         //setButtonの設定
@@ -88,7 +99,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         textView.backgroundColor = UIColor.black
         textView.textColor = UIColor.white
         textView.textAlignment = NSTextAlignment.left
-        //textView.font = UIFont.systemFont(ofSize: 25)
+        textView.font = UIFont.systemFont(ofSize: 25)
         textView.layer.borderWidth = 2
         textView.layer.borderColor = UIColor.white.cgColor
         textView.isEditable = false
@@ -107,24 +118,45 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if saveData.array(forKey: "dataKey") != nil{
             data = saveData.array(forKey: "dataKey") as! [[String]]
         }
-        print(0)
-        //dataの分秒の数値を全て取得
+        //全体時間の合計値
         for i in 0..<data.count {
-            count = count + Int(data[i][1])!
+            minCount = minCount + Int(data[i][2])!
+        }
+        for i in 0..<data.count {
+            secCount = secCount + Int(data[i][3])!
+        }
+        if secCount >= 60 {
+            minCount = minCount + (secCount / 60)
+            secCount = (secCount % 60)
+        }
+        //dataの値が10未満なら二桁目に0を付け加える
+        for i in 0..<data.count {
+            if Int(data[i][2])! < 10 {
+                data[i][2] = "0" + data[i][2]
+            }
+        }
+        for i in 0..<data.count {
+            if Int(data[i][3])! < 10 {
+                data[i][3] = "0" + data[i][3]
+            }
         }
     }
     
     //画面が表示された直後
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        /*//timerの生成 func update(tm: Timer)を１秒間隔で呼び出す
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-        //任意のタイミングでタイマーに登録したターゲットのメソッドを呼ぶ
-        timer.fire()*/
-        countButton.titleLabel?.text = String(count)
+        //全体時間の表示処理
+        if minCount < 10 && secCount < 10 {
+            countButton.setTitle("0" + String(minCount) + ":0" + String(secCount), for: .normal)
+        }else if minCount < 10{
+            countButton.setTitle("0" + String(minCount) + ":" + String(secCount), for: .normal)
+        }else if secCount < 10{
+            countButton.setTitle(String(minCount) + ":0" + String(secCount), for: .normal)
+        }else{
+            countButton.setTitle(String(minCount) + ":" + String(secCount), for: .normal)
+        }
         //timerの生成 func update(tm: Timer)を１秒間隔で呼び出す
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update1), userInfo: nil, repeats: true)
-
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
     }
     
     //別の画面に遷移する直前
@@ -133,31 +165,64 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //タイマーの停止
         timer.invalidate()
     }
-    //timerの処理を設定
-    /*func update(tm: Timer) {
-        count -= 1
-        countButton.titleLabel?.text = String(count)
-        //０になったらタイマーの停止
-        if count < 1 {
-            timer.invalidate()
-        }
-    }*/
     
-    func update1(tm: Timer) {
-        print(count1)
-        //count1 -= 1
-        nowTimeLabel.text = String(count1)
-        count1 -= 1
-        /*if count1 < 1 {
+    
+    func update(tm: Timer) {
+        print(min)
+        print(sec)
+        
+        if 0 <= tag && tag < data.count {
+        setTimeLabel.text = data[tag][2] + ":" + data[tag][3]
+        textView.text = data[tag][4]
+        }
+        //nowTimeLabelの表示とカウントダウン処理
+        if min < 10 && sec < 10 {
+            nowTimeLabel.text = "0" + String(min) + ":0" + String(sec)
+        }else if min < 10 {
+            nowTimeLabel.text = "0" + String(min) + ":" + String(sec)
+        }else if sec < 10 {
+            nowTimeLabel.text = String(min) + ":0" + String(sec)
+        }else{
+            nowTimeLabel.text = String(min) + ":" + String(sec)
+        }
+        if min == 0 && sec == 0 {
+            tag += 1
+            if tag == -1 || tag == data.count {
+                timer.invalidate()
+            }else{
+                min = Int(data[tag][2])!
+                sec = Int(data[tag][3])! + 1
+                
+                tableView.deselectRow(at: choice, animated: true)
+                //セルを選択状態にして一番上にスクロールさせる
+                //tableView.selectRow(at: choice, animated: true, scrollPosition: .top)
+                //tableView.moveRow(at: choice, to: auto)
+            }
+        }
+        if sec == 0{
+            min -= 1
+            sec = 60
+        }
+        if min == 0 && sec == 0 {
+            timer.fire()
+        }
+        sec -= 1
+    }
+    
+    //countButtonの処理
+    internal func onClickCountButton(sender: UIButton) {
+        if timerRunning == true{
             timer.invalidate()
-        }*/
-        if count1 < 0 {
-            timer.invalidate()
+            timerRunning = false
+        }else{
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+            RunLoop.current.add(timer, forMode: RunLoopMode.commonModes)
+            timerRunning = true
         }
     }
     
     //setButtonの処理
-    internal func onClickSetButton(sender: UIButton){
+    internal func onClickSetButton(sender: UIButton) {
         //遷移するViewの定義
         let mySecondViewController: UIViewController = SecondViewController()
         //アニメーションを設定
@@ -169,20 +234,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //tableViewの設定
     //cellが選択された際に呼び出される
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        timerRunning = true
+        tag = Int(data[indexPath.section][0])!
         //タイマーの停止
         timer.invalidate()
-        count1 = Int(data[indexPath.section][1])!
+        min = Int(data[indexPath.section][2])!
+        sec = Int(data[indexPath.section][3])!
         //timerの生成 func update(tm: Timer)を１秒間隔で呼び出す
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update1), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
         //任意のタイミングでタイマーに登録したターゲットのメソッドを呼ぶ
         timer.fire()
         
-        if setTimeLabel.text != "" && textView.text != ""{
+        //setTimeLabelとtextViewの表示の切り替え
+        if setTimeLabel.text != "" && textView.text != "" {
             setTimeLabel.text = ""
             textView.text = ""
         }
-        setTimeLabel.text = data[indexPath.section][1]
-        textView.text = data[indexPath.section][2]
+        setTimeLabel.text = data[indexPath.section][2] + ":" + data[indexPath.section][3]
+        textView.text = data[indexPath.section][4]
+        
+        choice = IndexPath (row: indexPath.row, section: indexPath.section)
+        //auto = IndexPath (row: (indexPath.row + 1), section: (indexPath.section + 1))
+        //セルを選択状態にして一番上にスクロールさせる
+        tableView.selectRow(at: choice, animated: true, scrollPosition: .top)
     }
     //cellをハイライトできるか指定
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
@@ -223,7 +297,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // 再利用するcellを取得する.
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewCell
         //customCellのLabelにデータを取得
-        cell.setCell(titleText: data[indexPath.section][0], timeText: data[indexPath.section][1])
+        cell.setCell(titleText: data[indexPath.section][1], minText: data[indexPath.section][2], secText: data[indexPath.section][3])
+        print(data)
+        
+        //cellのハイライト機能を削除
+        //cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         return cell
         }

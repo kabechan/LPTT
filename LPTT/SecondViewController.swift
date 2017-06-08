@@ -4,13 +4,15 @@
 //
 //  Created by 可部谷崇 on 2017/05/09.
 //  Copyright © 2017年 kabetani. All rights reserved.
-//
+
 
 import UIKit
 
 class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    //データを保存する定数:savaDataの作成
     let saveData = UserDefaults.standard
+    //多次元配列dataの作成
     var data: [[String]] = []
     
     private var tableView: UITableView!
@@ -18,6 +20,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private var backButton: UIButton!
     private var addButton: UIButton!
 
+    //Viewが初めて呼び出される時に一度だけ
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -53,6 +56,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.view.addSubview(addButton)
     }
     
+    //画面が表示される直前
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         //UserDefaultsの情報をdataに追加
@@ -70,14 +74,12 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //tableViewの設定
     //cellが選択された際に呼び出される
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //遷移するViewの定義
+        /*//遷移するViewの定義
         let myThirdViewController: UIViewController = ThirdViewController()
         //アニメーションを設定
         myThirdViewController.modalTransitionStyle = .crossDissolve
         //Viewの移動
-        self.present(myThirdViewController, animated:  true, completion: nil)
-        
-        print(data)
+        self.present(myThirdViewController, animated:  true, completion: nil)*/
     }
     
     //cellをハイライトできるか指定
@@ -117,8 +119,18 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用するcellを取得する.
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewCell
+        //dataの値が10未満なら二桁目に0を付け加える
+        if Int(data[indexPath.section][2])! < 10{
+            data[indexPath.section][2] = "0" + data[indexPath.section][2]
+        }
+        if Int(data[indexPath.section][3])! < 10{
+            data[indexPath.section][3] = "0" + data[indexPath.section][3]
+        }
         //customCellのLabelにデータを取得
-        cell.setCell(titleText: data[indexPath.section][0], timeText: data[indexPath.section][1])
+        cell.setCell(titleText: data[indexPath.section][1], minText: data[indexPath.section][2], secText: data[indexPath.section][3])
+        
+        //cellのハイライト機能を削除
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
 
         return cell
     }
@@ -142,14 +154,4 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //Viewの移動
         self.present(myThirdViewController, animated:  true, completion: nil)
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
